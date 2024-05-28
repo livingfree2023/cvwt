@@ -84,12 +84,14 @@ GetProxName() {
 }
 
 handle_err() {
-  echo "Restore background process."
-  proxy=$(GetProxName $clien)
-  /etc/init.d/$proxy start
+  if [ "$pause" = "true" ] ; then
+    echo "Restore background process."
+    proxy=$(GetProxName $clien)
+    /etc/init.d/$proxy start
+  fi
 }
 
-trap handle_err EXIT
+trap handle_err HUP INT TERM
 CLIEN=$(GetProxName $clien)
 ps -ef | grep $CLIEN | grep -v "grep" >/dev/null
 
@@ -100,7 +102,7 @@ fi
 if [ -z $ipfile ]; then
   echo "1.Download ip file."
   for i in {1..3}; do
-    wget -O $ipzipfile https://zip.baipiao.eu.org
+    wget -O $ipzipfile https://zip.baipiao.eu.org > /dev/null
 
     if [ $? != 0 ]; then
       echo "get ip file failed, try again"
@@ -113,7 +115,7 @@ if [ -z $ipfile ]; then
   done
 
   if [ -e $ipzipfile ]; then
-    unzip -o $ipzipfile
+    unzip -o $ipzipfile > /dev/null
   else
     echo "Can't download the ip zip file, Check whether the agent software is disabled."
   fi
