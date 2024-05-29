@@ -1,6 +1,6 @@
 #!/bin/bash
 ##用于CloudflareSpeedTestDDNS执行情况推送。
-#echo $pushmessage
+#echo "$pushmessage"
 message_text=$pushmessage
 #解析模式，可选HTML或Markdown
 MODE='HTML'
